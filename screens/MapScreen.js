@@ -26,7 +26,7 @@ const MapScreen = ({route}) => {
     latitude: 55.864368,
     longitude: -4.29096,
   };
-  const GOOGLE_MAPS_APIKEY = 'YOUR_API_KEY';
+  const GOOGLE_MAPS_APIKEY = 'YOUR_GOOGLE_API_KEY';
   return (
     <View style={styles.container}>
       <MapView
@@ -47,6 +47,8 @@ const MapScreen = ({route}) => {
           <MapViewDirections
             origin={origin}
             destination={destination}
+            strokeColor="blue"
+            strokeWidth={3}
             apikey={GOOGLE_MAPS_APIKEY}
           />
         ) : null}
