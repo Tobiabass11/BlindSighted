@@ -1,58 +1,55 @@
 import React, {useState} from 'react';
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import {SafeAreaView} from 'react-native-safe-area-context';
+import {
+  Dimensions,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps';
 import {useNavigation} from '@react-navigation/native';
+import MapViewDirections from 'react-native-maps-directions';
 
 const MapScreen = ({route}) => {
+  const {width, height} = Dimensions.get('window');
+
+  const ASPECT_RATIO = width / height;
+  const LATITUDE_DELTA = 0.02;
+  const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
+
   const navigation = useNavigation();
   console.log(route.params.paramKey);
-  const currentLatitude = 55.872589;
-  const currentLongitude = -4.28994;
-  const latDelta = 0.015;
-  const lngDelta = 0.0121;
-  const destinationLatitude = 55.864368;
-  const destinationLongitude = -4.29096;
-  const [markersList, setMarkersList] = useState([
-    {
-      id: 1,
-      latitude: currentLatitude,
-      longitude: currentLongitude,
-      title: 'I am here',
-      description: 'This is my current location',
-    },
-    {
-      id: 2,
-      latitude: destinationLatitude,
-      longitude: destinationLongitude,
-      title: 'I want to go there',
-      description: 'This is my destination location',
-    },
-  ]);
+  const latDelta = LATITUDE_DELTA;
+  const lngDelta = LONGITUDE_DELTA;
+  const origin = {latitude: 55.872589, longitude: -4.28994};
+  const destination = {
+    latitude: 55.864368,
+    longitude: -4.29096,
+  };
+  const GOOGLE_MAPS_APIKEY = 'YOUR_API_KEY';
   return (
     <View style={styles.container}>
       <MapView
         provider={PROVIDER_GOOGLE} // remove if not using Google Maps
         style={styles.map}
         region={{
-          latitude: currentLatitude,
-          longitude: currentLongitude,
+          latitude: origin.latitude,
+          longitude: origin.longitude,
           latitudeDelta: latDelta,
           longitudeDelta: lngDelta,
         }}>
-        {markersList.map(marker => {
-          return (
-            <Marker
-              key={marker.id}
-              coordinate={{
-                latitude: marker.latitude,
-                longitude: marker.longitude,
-              }}
-              title={marker.title}
-              description={marker.description}
-            />
-          );
-        })}
+        {origin !== undefined ? <Marker coordinate={origin}></Marker> : null}
+        {destination !== undefined ? (
+          <Marker coordinate={destination}></Marker>
+        ) : null}
+
+        {origin != undefined && destination != undefined ? (
+          <MapViewDirections
+            origin={origin}
+            destination={destination}
+            apikey={GOOGLE_MAPS_APIKEY}
+          />
+        ) : null}
       </MapView>
       <View style={styles.buttonContainer}>
         <TouchableOpacity
