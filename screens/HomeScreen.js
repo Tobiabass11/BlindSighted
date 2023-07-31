@@ -20,12 +20,12 @@ const HomeScreen = () => {
         onPress={() =>
           navigation.navigate('MapScreen', {paramKey: destinationAddress})
         }>
-        <Text>MAP</Text>
+        <Text style={styles.buttonText}>MAP</Text>
       </TouchableOpacity>
       <TouchableOpacity
         style={styles.button}
         onPress={() => navigation.navigate('EmergencyScreen')}>
-        <Text>EMERGENCY</Text>
+        <Text style={styles.buttonText}>EMERGENCY</Text>
       </TouchableOpacity>
     </SafeAreaView>
   );
@@ -41,8 +41,15 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   button: {
+    backgroundColor: 'black',
+    padding: 12,
+    borderRadius: 8,
+    margin: 20,
     alignItems: 'center',
-    backgroundColor: '#DDDDDD',
-    padding: 10,
+  },
+  buttonText: {
+    color: 'white',
+    fontSize: 18,
+    textAlign: 'center',
   },
 });
