@@ -15,7 +15,7 @@ const EmergencyScreen = () => {
   const [emergencyContact, setEmergencyContact] = useState();
   // TO MAKE CONTACT WITH EMERGENCY CONTACT
   const makePhoneCall = () => {
-    if (Platform.OS == 'android') {
+    if (Platform.OS === 'android') {
       Linking.openURL(`tel:${emergencyContact}`);
     } else {
       Linking.openURL(`telprompt:${emergencyContact}`);
@@ -23,7 +23,7 @@ const EmergencyScreen = () => {
   };
   // TO CALL THE POLICE
   const callPolice = () => {
-    if (Platform.OS == 'android') {
+    if (Platform.OS === 'android') {
       Linking.openURL('tel:999');
     } else {
       Linking.openURL('telprompt:999');
@@ -32,7 +32,7 @@ const EmergencyScreen = () => {
 
   // TO CALL THE HOSPITAL
   const callHospital = () => {
-    if (Platform.OS == 'android') {
+    if (Platform.OS === 'android') {
       Linking.openURL('tel:111');
     } else {
       Linking.openURL('telprompt:111');
@@ -44,7 +44,7 @@ const EmergencyScreen = () => {
         style={styles.input}
         onChangeText={setEmergencyContact}
         value={emergencyContact}
-        placeholder="Enter Address"
+        placeholder="Enter phone number"
         keyboardType="numeric"
       />
       <TouchableOpacity style={styles.button} onPress={() => makePhoneCall()}>

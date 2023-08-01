@@ -1,6 +1,8 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   Dimensions,
+  PermissionsAndroid,
+  Platform,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -9,8 +11,12 @@ import {
 import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps';
 import {useNavigation} from '@react-navigation/native';
 import MapViewDirections from 'react-native-maps-directions';
+import GetLocation from 'react-native-get-location';
+import Geolocation from '@react-native-community/geolocation';
+import {SafeAreaView} from 'react-native-safe-area-context';
 
 const MapScreen = ({route}) => {
+  const [permssionGranter, setPermissionGranter] = useState(false);
   const {width, height} = Dimensions.get('window');
 
   const ASPECT_RATIO = width / height;
@@ -27,6 +33,69 @@ const MapScreen = ({route}) => {
     longitude: -4.29096,
   };
   const GOOGLE_MAPS_APIKEY = 'YOUR_GOOGLE_API_KEY';
+
+  useEffect(() => {
+    _getLocationPermission();
+  }, []);
+
+  const _getLocationPermission = async () => {
+    if (Platform.OS === 'android') {
+      try {
+        const granted = await PermissionsAndroid.request(
+          PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+          {
+            title: 'BlindSighted App Location Permission',
+            message:
+              'BlindSighted App needs access to your location ' +
+              'so you can use GPS in the app.',
+            buttonNeutral: 'Ask Me Later',
+            buttonNegative: 'Cancel',
+            buttonPositive: 'OK',
+          },
+        );
+        if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+          console.log('You can use the location');
+          setPermissionGranter(true);
+          _getCurrentLocation();
+        } else {
+          console.log('Location permission denied');
+        }
+      } catch (err) {
+        console.warn(err);
+      }
+    } else if (Platform.OS === 'ios') {
+      Geolocation.requestAuthorization(
+        () => {
+          console.log('success');
+          setPermissionGranter(true);
+        },
+        () => {
+          console.log('error');
+        },
+      );
+    }
+  };
+
+  const _getCurrentLocation = () => {
+    GetLocation.getCurrentPosition({
+      enableHighAccuracy: true,
+      timeout: 60000,
+    })
+      .then(location => {
+        console.log('My current is =>', location);
+      })
+      .catch(error => {
+        const {code, message} = error;
+        console.warn(code, message);
+      });
+  };
+  if (!permssionGranter) {
+    return (
+      <SafeAreaView>
+        <Text>Please allow location permission to continue</Text>
+      </SafeAreaView>
+    );
+  }
   return (
     <View style={styles.container}>
       <MapView
@@ -43,7 +112,7 @@ const MapScreen = ({route}) => {
           <Marker coordinate={destination}></Marker>
         ) : null}
 
-        {origin != undefined && destination != undefined ? (
+        {origin !== undefined && destination !== undefined ? (
           <MapViewDirections
             origin={origin}
             destination={destination}
