@@ -13,29 +13,30 @@ import {useNavigation} from '@react-navigation/native';
 import MapViewDirections from 'react-native-maps-directions';
 import Geolocation from '@react-native-community/geolocation';
 import ImagePath from '../constants/ImagePath';
+import {GOOGLE_MAPS_API_KEY} from '../../environments';
 
 const MapScreen = ({route}) => {
+  // MAP FIT SETTINGS
   const {width, height} = Dimensions.get('window');
-
   const ASPECT_RATIO = width / height;
   const LATITUDE_DELTA = 0.02;
   const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 
   const navigation = useNavigation();
-  const latDelta = LATITUDE_DELTA;
-  const lngDelta = LONGITUDE_DELTA;
+
+  // STATES FOR ORIGIN AND DESTINATION
   const [origin, setOrigin] = useState({
     latitude: 55.8752632,
     longitude: -4.2934001,
   });
   const destination = {
-    latitude: 55.8752632,
-    longitude: -4.2934001,
+    latitude: route.params.paramKey.latitude,
+    longitude: route.params.paramKey.longitude,
   };
   const [distance, setDistance] = useState(0);
   const [duration, setDuration] = useState(0);
-  const GOOGLE_MAPS_APIKEY = 'GOOGLE_MAPS_APIKEY';
 
+  // REQUESTING FOR USER PERMISSIONS
   useEffect(() => {
     const requestLocationPermission = async () => {
       if (Platform.OS === 'android') {
@@ -76,7 +77,7 @@ const MapScreen = ({route}) => {
     requestLocationPermission();
   }, []);
 
-  // GETTING CURRENT LOCATION
+  // GETTING CURRENT LOCATION ONCE
   const getCurrentLocation = () => {
     Geolocation.getCurrentPosition(
       position => {
@@ -93,14 +94,14 @@ const MapScreen = ({route}) => {
     );
   };
 
-  // TO GET LIVE LOCATION
-  useEffect(() => {
-    const interval = setInterval(() => {
-      getCurrentLocation();
-      console.log('You have moved');
-    }, 4000);
-    return () => clearInterval(interval);
-  });
+  // TO GET LIVE LOCATION EVERY
+  // useEffect(() => {
+  //   const interval = setInterval(() => {
+  //     getCurrentLocation();
+  //     console.log('You have moved');
+  //   }, 4000);
+  //   return () => clearInterval(interval);
+  // });
 
   // CONSOLE LOGS FOR TESTING
   console.log('This is destination address', route.params.paramKey);
@@ -123,8 +124,8 @@ const MapScreen = ({route}) => {
         initialRegion={{
           latitude: origin.latitude,
           longitude: origin.longitude,
-          latitudeDelta: latDelta,
-          longitudeDelta: lngDelta,
+          latitudeDelta: LATITUDE_DELTA,
+          longitudeDelta: LONGITUDE_DELTA,
         }}>
         {origin !== undefined ? (
           <Marker coordinate={origin} image={ImagePath.icCurLoc}></Marker>
@@ -139,7 +140,7 @@ const MapScreen = ({route}) => {
             destination={destination}
             strokeColor="blue"
             strokeWidth={4}
-            apikey={GOOGLE_MAPS_APIKEY}
+            apikey={GOOGLE_MAPS_API_KEY}
             mode="WALKING"
             optimizeWaypoints={true}
             onStart={params => {
@@ -153,10 +154,10 @@ const MapScreen = ({route}) => {
               fetchTime(result.distance, result.duration);
               mapRef.current.fitToCoordinates([origin, destination], {
                 edgePadding: {
-                  right: width / 20,
-                  bottom: height / 20,
-                  left: width / 20,
-                  top: height / 20,
+                  // right: width / 20,
+                  // bottom: height / 20,
+                  // left: width / 20,
+                  // top: height / 20,
                 },
               });
             }}

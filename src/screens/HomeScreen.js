@@ -1,32 +1,68 @@
-import {StyleSheet, Text, TextInput, TouchableOpacity} from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import React, {useState} from 'react';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {useNavigation} from '@react-navigation/native';
+import {GooglePlacesAutocomplete} from 'react-native-google-places-autocomplete';
+import {GOOGLE_MAPS_API_KEY} from '../../environments';
 
 const HomeScreen = () => {
   const navigation = useNavigation();
   const [destinationAddress, setDestinationAddress] = useState();
 
+  const [destination, setDestination] = useState({
+    latitude: 55.8752632,
+    longitude: -4.2934001,
+  });
+  console.log('This is your destination', destination);
   return (
-    <SafeAreaView>
-      <TextInput
+    <SafeAreaView style={{flex: 1}}>
+      {/* <TextInput
         style={styles.input}
         onChangeText={setDestinationAddress}
         value={destinationAddress}
         placeholder="Enter Address"
-      />
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() =>
-          navigation.navigate('MapScreen', {paramKey: destinationAddress})
-        }>
-        <Text style={styles.buttonText}>MAP</Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() => navigation.navigate('EmergencyScreen')}>
-        <Text style={styles.buttonText}>EMERGENCY</Text>
-      </TouchableOpacity>
+      /> */}
+      <View style={{flex: 1}}>
+        <GooglePlacesAutocomplete
+          fetchDetails={true}
+          placeholder="Search"
+          onPress={(data, details = null) => {
+            // 'details' is provided when fetchDetails = true
+            // console.log('data', data);
+            // console.log('details', details);
+            // console.log(JSON.stringify(details?.geometry?.location));
+            const destinationCoords = {
+              latitude: details?.geometry?.location.lat,
+              longitude: details?.geometry?.location.lng,
+            };
+            setDestination(destinationCoords);
+          }}
+          query={{
+            key: GOOGLE_MAPS_API_KEY,
+            language: 'en',
+          }}
+        />
+      </View>
+      <View style={{flex: 2}}>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() =>
+            navigation.navigate('MapScreen', {paramKey: destination})
+          }>
+          <Text style={styles.buttonText}>MAP</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => navigation.navigate('EmergencyScreen')}>
+          <Text style={styles.buttonText}>EMERGENCY</Text>
+        </TouchableOpacity>
+      </View>
     </SafeAreaView>
   );
 };
