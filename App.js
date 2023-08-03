@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
-import MyStack from './screens/MyStack';
+import MyStack from './src/screens/MyStack';
 
 const App = () => {
   return (
