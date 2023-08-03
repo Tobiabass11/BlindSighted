@@ -99,7 +99,7 @@ const MapScreen = ({route}) => {
     const interval = setInterval(() => {
       getCurrentLocation();
       console.log('You have moved');
-    }, 4000);
+    }, 6000);
     return () => clearInterval(interval);
   });
 
