@@ -22,21 +22,11 @@ const HomeScreen = () => {
   console.log('This is your destination', destination);
   return (
     <SafeAreaView style={{flex: 1}}>
-      {/* <TextInput
-        style={styles.input}
-        onChangeText={setDestinationAddress}
-        value={destinationAddress}
-        placeholder="Enter Address"
-      /> */}
       <View style={{flex: 1}}>
         <GooglePlacesAutocomplete
           fetchDetails={true}
           placeholder="Search"
           onPress={(data, details = null) => {
-            // 'details' is provided when fetchDetails = true
-            // console.log('data', data);
-            // console.log('details', details);
-            // console.log(JSON.stringify(details?.geometry?.location));
             const destinationCoords = {
               latitude: details?.geometry?.location.lat,
               longitude: details?.geometry?.location.lng,
