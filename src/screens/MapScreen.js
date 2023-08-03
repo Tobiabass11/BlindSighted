@@ -95,13 +95,13 @@ const MapScreen = ({route}) => {
   };
 
   // TO GET LIVE LOCATION EVERY
-  // useEffect(() => {
-  //   const interval = setInterval(() => {
-  //     getCurrentLocation();
-  //     console.log('You have moved');
-  //   }, 4000);
-  //   return () => clearInterval(interval);
-  // });
+  useEffect(() => {
+    const interval = setInterval(() => {
+      getCurrentLocation();
+      console.log('You have moved');
+    }, 4000);
+    return () => clearInterval(interval);
+  });
 
   // CONSOLE LOGS FOR TESTING
   console.log('This is destination address', route.params.paramKey);
