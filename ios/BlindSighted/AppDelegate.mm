@@ -8,7 +8,7 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-  [GMSServices provideAPIKey:@"GOOGLE_MAPS_APIKEY"];
+  [GMSServices provideAPIKey:@"GOOGLE_MAPS_API_KEY"];
   self.moduleName = @"BlindSighted";
   // You can add your custom initial props in the dictionary below.
   // They will be passed down to the ViewController used by React Native.
